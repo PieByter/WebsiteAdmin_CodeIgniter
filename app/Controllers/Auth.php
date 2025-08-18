@@ -143,10 +143,12 @@ class Auth extends BaseController
             ];
 
             if (!$this->validate($rules)) {
-                return view('auth/register', [
-                    'validation' => $this->validator
-                ]);
+                // return view('auth/register', [
+                //     'validation' => $this->validator
+                // ]);
+                return redirect()->back()->withInput()->with('validation', $this->validator);
             }
+
 
             try {
                 // Simpan user baru
