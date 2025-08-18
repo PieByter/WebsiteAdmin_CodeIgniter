@@ -201,17 +201,42 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 height: 400,
-                events: [
-                    // Contoh event statis, bisa diganti dari backend
-                    {
-                        title: 'Meeting',
-                        start: '<?= date('Y-m-d') ?>'
-                    },
-                    {
-                        title: 'Deadline',
-                        start: '<?= date('Y-m-d', strtotime('+3 days')) ?>'
+                selectable: true, // aktifkan pilih tanggal
+                events: '/event', // ambil event dari backend
+                select: function(info) {
+                    // Prompt judul event
+                    var title = prompt('Judul kegiatan:');
+                    if (title) {
+                        // Kirim ke backend
+                        fetch('/event/create', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    title: title,
+                                    start: info.startStr,
+                                    end: info.endStr
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                calendar.refetchEvents(); // refresh event
+                            });
                     }
-                ]
+                    calendar.unselect();
+                },
+                eventClick: function(info) {
+                    if (confirm('Hapus jadwal "' + info.event.title + '"?')) {
+                        fetch('/event/delete/' + info.event.id, {
+                                method: 'POST'
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                calendar.refetchEvents(); // refresh event
+                            });
+                    }
+                }
             });
             calendar.render();
         }

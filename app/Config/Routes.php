@@ -31,6 +31,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     // User bisa akses view barang
     $routes->get('barang', 'Barang::index');
     $routes->get('barang/view/(:num)', 'Barang::view/$1');
+
+    $routes->get('event', 'Event::index');
+    $routes->post('event/create', 'Event::create');
+    $routes->post('event/delete/(:num)', 'Event::delete/$1');
 });
 
 
