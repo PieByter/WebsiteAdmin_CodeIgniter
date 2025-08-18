@@ -188,7 +188,8 @@
                 <label for="password">Password</label>
                 <div class="password-container">
                     <input type="password" class="form-control" id="password" name="password"
-                        oninput="checkPasswordStrength()" placeholder="Masukkan password" required>
+                        oninput="checkPasswordStrength()" placeholder="Masukkan password" value="<?= old('password') ?>"
+                        required>
                     <i class="bi bi-eye-slash password-toggle" id="togglePassword"
                         onclick="togglePasswordVisibility('password', 'togglePassword')" title="Show/Hide Password"></i>
                 </div>
@@ -204,7 +205,7 @@
                 <label for="confirm_password">Confirm Password</label>
                 <div class="password-container">
                     <input type="password" class="form-control" id="confirm_password" name="confirm_password"
-                        placeholder="Konfirmasi password" required>
+                        placeholder="Konfirmasi password" value="<?= old('confirm_password') ?>" required>
                     <i class="bi bi-eye-slash password-toggle" id="toggleConfirmPassword"
                         onclick="togglePasswordVisibility('confirm_password', 'toggleConfirmPassword')"
                         title="Show/Hide Confirm Password"></i>
