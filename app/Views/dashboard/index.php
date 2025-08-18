@@ -1,6 +1,10 @@
 <?= $this->extend('layout/template') ?>
 
 <?= $this->section('content') ?>
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
 <div class="container-fluid">
     <div
         class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -85,8 +89,6 @@
         <?php endif; ?>
     </div>
 
-
-
     <!-- Informasi Tambahan -->
     <div class="row mt-3">
         <div class="col-md-6">
@@ -111,7 +113,7 @@
                     Pintasan
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-xl-6">
                             <ul class="list-unstyled mb-0">
                                 <li><a href="<?= site_url('profile') ?>">Edit Profil</a></li>
@@ -121,12 +123,40 @@
                                 <?php endif; ?>
                             </ul>
                         </div>
+                    </div> -->
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="<?= site_url('profile') ?>" class="btn btn-primary">
+                            <i class="bi bi-person"></i> Edit Profil
+                        </a>
+                        <?php if (session('role') == 'admin'): ?>
+                            <a href="<?= site_url('admin/barang/create') ?>" class="btn btn-warning text-white">
+                                <i class="bi bi-plus-circle"></i> Tambah Barang
+                            </a>
+                            <a href="<?= site_url('admin/users') ?>" class="btn btn-success">
+                                <i class="bi bi-people"></i> Kelola Pengguna
+                            </a>
+                            <a href="<?= site_url('admin/logs') ?>" class="btn btn-info text-white">
+                                <i class="bi bi-list-check"></i> Kelola Logs
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="card mb-4 h-100">
+                <div class="card-header">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    Kalender Kegiatan
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Toast Container -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -164,5 +194,27 @@
             window.history.replaceState({}, document.title, newUrl);
         }, 500);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 400,
+                events: [
+                    // Contoh event statis, bisa diganti dari backend
+                    {
+                        title: 'Meeting',
+                        start: '<?= date('Y-m-d') ?>'
+                    },
+                    {
+                        title: 'Deadline',
+                        start: '<?= date('Y-m-d', strtotime('+3 days')) ?>'
+                    }
+                ]
+            });
+            calendar.render();
+        }
+    });
 </script>
 <?= $this->endSection() ?>
