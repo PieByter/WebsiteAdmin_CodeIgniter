@@ -206,21 +206,23 @@
                             <label for="addEventDate" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="addEventDate" required>
                         </div>
-                        <div class="mb-2">
-                            <label for="addEventStartTime" class="form-label">Jam Mulai</label>
-                            <input type="time" class="form-control" id="addEventStartTime">
-                        </div>
-                        <div class="mb-2">
-                            <label for="addEventEndTime" class="form-label">Jam Selesai</label>
-                            <input type="time" class="form-control" id="addEventEndTime">
-                        </div>
-                        <div class="mb-2">
-                            <label for="addEventColor" class="form-label">Warna Tag</label>
-                            <input type="color" class="form-control form-control-color" id="addEventColor"
-                                value="#3788d8">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label for="addEventStartTime" class="form-label">Jam Mulai</label>
+                                <input type="time" class="form-control" id="addEventStartTime">
+                            </div>
+                            <div class="col">
+                                <label for="addEventEndTime" class="form-label">Jam Selesai</label>
+                                <input type="time" class="form-control" id="addEventEndTime">
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <div class="mb-0">
+                            <!-- <label for="addEventColor" class="form-label me-2">Warna Tag</label> -->
+                            <input type="color" class="form-control form-control-color d-inline-block"
+                                id="addEventColor" value="#3788d8">
+                        </div>
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </div>
                 </div>
@@ -239,7 +241,7 @@
                     </div>
                     <div class="modal-body">
                         <input type="hidden" id="editEventId">
-                        <div class="mb-2">
+                        <div class="rowmb-2">
                             <label for="editEventTitle" class="form-label">Judul</label>
                             <input type="text" class="form-control" id="editEventTitle" required>
                         </div>
@@ -251,43 +253,57 @@
                             <label for="editEventDate" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="editEventDate" required>
                         </div>
-                        <div class="mb-2">
-                            <label for="editEventStartTime" class="form-label">Jam Mulai</label>
-                            <input type="time" class="form-control" id="editEventStartTime">
+                        <div class="row mb-2">
+                            <div class="col">
+                                <label for="editEventStartTime" class="form-label">Jam Mulai</label>
+                                <input type="time" class="form-control" id="editEventStartTime">
+                            </div>
+                            <div class="col">
+                                <label for="editEventEndTime" class="form-label">Jam Selesai</label>
+                                <input type="time" class="form-control" id="editEventEndTime">
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label for="editEventEndTime" class="form-label">Jam Selesai</label>
-                            <input type="time" class="form-control" id="editEventEndTime">
-                        </div>
-                        <div class="mb-2">
+                        <!-- <div class="mb-2">
                             <label for="editEventColor" class="form-label">Warna Tag</label>
                             <input type="color" class="form-control form-control-color" id="editEventColor"
                                 value="#3788d8">
-                        </div>
+                        </div> -->
                     </div>
-                    <div class="modal-footer">
+                    <!-- <div class="modal-footer">
                         <button type="button" id="deleteEventBtn" class="btn btn-danger">Hapus</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div> -->
+
+                    <div class="modal-footer d-flex justify-content-between align-items-center">
+                        <div class="mb-0">
+                            <!-- <label for="editEventColor" class="form-label me-2">Warna Tag</label> -->
+                            <input type="color" class="form-control form-control-color d-inline-block"
+                                id="editEventColor" value="#3788d8"><!--  style="width: 2.5em; height: 2.5em;" -->
+                        </div>
+                        <div>
+                            <button type="button" id="deleteEventBtn" class="btn btn-danger me-2">Hapus</button>
+                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        </div>
                     </div>
                 </div>
-            </form>
         </div>
+        </form>
     </div>
+</div>
 
-    <!-- Toast Container -->
-    <div class="toast-container position-fixed top-0 end-0 p-3">
-        <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-primary text-white">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <strong class="me-auto">Login Berhasil</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Anda telah berhasil login ke dashboard.
-            </div>
+<!-- Toast Container -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-primary text-white">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <strong class="me-auto">Login Berhasil</strong>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Anda telah berhasil login ke dashboard.
         </div>
     </div>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -297,10 +313,9 @@
     const loginStatus = urlParams.get('login');
 
     if (loginStatus === 'success') {
-        // Tampilkan toast notifikasi
         const toastElement = document.getElementById('loginToast');
         const toast = new bootstrap.Toast(toastElement, {
-            delay: 3000 // 3 detik
+            delay: 3000
         });
         toast.show();
 
