@@ -22,7 +22,9 @@ class Event extends BaseController
                 'start' => $ev['start'],
                 'end' => $ev['end'],
                 'description' => $ev['description'],
-                'backgroundColor' => $ev['color'] ?? '#3788d8'
+                'backgroundColor' => $ev['color'] ?? '#3788d8',
+                'start_time' => $ev['start_time'],
+                'end_time' => $ev['end_time'],
             ];
         }
 
@@ -43,7 +45,9 @@ class Event extends BaseController
             'end' => $json['end'] ?? '',
             'description' => $json['description'] ?? '',
             'user_id' => session('user_id'),
-            'color' => $json['color'] ?? '#3788d8'
+            'color' => $json['color'] ?? '#3788d8',
+            'start_time' => $json['start_time'] ?? '',
+            'end_time' => $json['end_time'] ?? '',
         ];
 
         if (!$data['title'] || !$data['start'] || !$data['user_id']) {
@@ -68,7 +72,9 @@ class Event extends BaseController
             'start' => $json['start'] ?? '',
             'end' => $json['end'] ?? '',
             'description' => $json['description'] ?? '',
-            'color' => $json['color'] ?? '#3788d8'
+            'color' => $json['color'] ?? '#3788d8',
+            'start_time' => $json['start_time'] ?? '',
+            'end_time' => $json['end_time'] ?? '',
         ];
 
         // Validasi minimal

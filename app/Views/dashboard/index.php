@@ -20,7 +20,8 @@
 
 <style>
     /* Modal edit event lebih kecil dan benar-benar di tengah */
-    #editEventModal .modal-dialog {
+    #editEventModal .modal-dialog,
+    #addEventModal .modal-dialog {
         max-width: 400px;
         /* Modal lebih kecil */
         margin: 0 auto;
@@ -206,6 +207,14 @@
                             <input type="date" class="form-control" id="addEventDate" required>
                         </div>
                         <div class="mb-2">
+                            <label for="addEventStartTime" class="form-label">Jam Mulai</label>
+                            <input type="time" class="form-control" id="addEventStartTime">
+                        </div>
+                        <div class="mb-2">
+                            <label for="addEventEndTime" class="form-label">Jam Selesai</label>
+                            <input type="time" class="form-control" id="addEventEndTime">
+                        </div>
+                        <div class="mb-2">
                             <label for="addEventColor" class="form-label">Warna Tag</label>
                             <input type="color" class="form-control form-control-color" id="addEventColor"
                                 value="#3788d8">
@@ -241,6 +250,14 @@
                         <div class="mb-2">
                             <label for="editEventDate" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="editEventDate" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="editEventStartTime" class="form-label">Jam Mulai</label>
+                            <input type="time" class="form-control" id="editEventStartTime">
+                        </div>
+                        <div class="mb-2">
+                            <label for="editEventEndTime" class="form-label">Jam Selesai</label>
+                            <input type="time" class="form-control" id="editEventEndTime">
                         </div>
                         <div class="mb-2">
                             <label for="editEventColor" class="form-label">Warna Tag</label>
@@ -329,7 +346,11 @@
                                 description: document.getElementById('addEventDesc')
                                     .value,
                                 start: document.getElementById('addEventDate').value,
-                                color: document.getElementById('addEventColor').value
+                                color: document.getElementById('addEventColor').value,
+                                start_time: document.getElementById('addEventStartTime')
+                                    .value,
+                                end_time: document.getElementById('addEventEndTime')
+                                    .value
                             })
                         })
                         .then(response => response.json())
@@ -341,7 +362,6 @@
                 calendar.unselect();
             },
 
-
             // Edit/hapus event
             eventClick: function(info) {
                 // Isi form modal dengan data event
@@ -350,23 +370,28 @@
                 document.getElementById('editEventDesc').value = info.event.extendedProps.description ||
                     '';
                 document.getElementById('editEventDate').value = info.event.startStr;
+                document.getElementById('editEventStartTime').value = info.event.extendedProps
+                    .start_time || '';
+                document.getElementById('editEventEndTime').value = info.event.extendedProps.end_time ||
+                    '';
                 document.getElementById('editEventColor').value = info.event.backgroundColor ||
                     '#3788d8';
+
 
                 editModal.show();
 
                 // Tombol hapus
                 document.getElementById('deleteEventBtn').onclick = function() {
-                    if (confirm('Hapus jadwal "' + info.event.title + '"?')) {
-                        fetch('/event/delete/' + info.event.id, {
-                                method: 'POST'
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                calendar.refetchEvents();
-                                editModal.hide();
-                            });
-                    }
+                    // if (confirm('Hapus jadwal "' + info.event.title + '"?')) {
+                    fetch('/event/delete/' + info.event.id, {
+                            method: 'POST'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            calendar.refetchEvents();
+                            editModal.hide();
+                        });
+                    // }
                 };
 
                 // Submit edit
@@ -382,7 +407,11 @@
                                 description: document.getElementById('editEventDesc')
                                     .value,
                                 start: document.getElementById('editEventDate').value,
-                                color: document.getElementById('editEventColor').value
+                                color: document.getElementById('editEventColor').value,
+                                start_time: document.getElementById(
+                                    'editEventStartTime').value,
+                                end_time: document.getElementById('editEventEndTime')
+                                    .value,
                             })
                         })
                         .then(response => response.json())
@@ -397,4 +426,5 @@
         calendar.render();
     });
 </script>
+
 <?= $this->endSection() ?>
