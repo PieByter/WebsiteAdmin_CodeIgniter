@@ -21,7 +21,8 @@ class Event extends BaseController
                 'title' => $ev['title'],
                 'start' => $ev['start'],
                 'end' => $ev['end'],
-                'description' => $ev['description']
+                'description' => $ev['description'],
+                'backgroundColor' => $ev['color'] ?? '#3788d8'
             ];
         }
 
@@ -34,24 +35,52 @@ class Event extends BaseController
         log_message('debug', 'Event JSON: ' . json_encode($json));
         log_message('debug', 'Session user_id: ' . session('user_id'));
 
-        $eventModel = new \App\Models\EventModel();
+        $eventModel = new EventModel();
 
         $data = [
             'title' => $json['title'] ?? '',
             'start' => $json['start'] ?? '',
             'end' => $json['end'] ?? '',
             'description' => $json['description'] ?? '',
-            'user_id' => session('user_id')
+            'user_id' => session('user_id'),
+            'color' => $json['color'] ?? '#3788d8'
         ];
 
-        // Validasi minimal
         if (!$data['title'] || !$data['start'] || !$data['user_id']) {
             return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Data tidak lengkap']);
         }
+
         $eventModel->insert($data);
 
         return $this->response->setJSON(['status' => 'success']);
     }
+
+    public function update($id)
+    {
+        $json = $this->request->getJSON(true);
+        log_message('debug', 'Update Event JSON: ' . json_encode($json));
+        log_message('debug', 'Session user_id: ' . session('user_id'));
+
+        $eventModel = new EventModel();
+
+        $data = [
+            'title' => $json['title'] ?? '',
+            'start' => $json['start'] ?? '',
+            'end' => $json['end'] ?? '',
+            'description' => $json['description'] ?? '',
+            'color' => $json['color'] ?? '#3788d8'
+        ];
+
+        // Validasi minimal
+        if (!$data['title'] || !$data['start']) {
+            return $this->response->setStatusCode(400)->setJSON(['status' => 'error', 'message' => 'Data tidak lengkap']);
+        }
+
+        $eventModel->update($id, $data);
+
+        return $this->response->setJSON(['status' => 'success']);
+    }
+
     public function delete($id)
     {
         $eventModel = new EventModel();

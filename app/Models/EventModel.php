@@ -13,9 +13,10 @@ class EventModel extends Model
         'start',
         'end',
         'description',
-        'created_at',
-        'user_id'
+        'user_id',
+        'color'
     ];
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
+    protected $useTimestamps = false;
+    // protected $createdField  = 'created_at';
+    // // protected $updatedField = 'updated_at';
 }

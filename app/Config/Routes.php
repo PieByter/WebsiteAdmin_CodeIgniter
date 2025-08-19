@@ -35,8 +35,8 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('event', 'Event::index');
     $routes->post('event/create', 'Event::create');
     $routes->post('event/delete/(:num)', 'Event::delete/$1');
+    $routes->post('event/update/(:num)', 'Event::update/$1');
 });
-
 
 // Admin routes
 $routes->group('admin', ['filter' => 'admin'], function ($routes) {

@@ -4,6 +4,31 @@
 
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<!-- <style>
+    /* Modal edit event lebih ke tengah layar */
+    #editEventModal .modal-dialog {
+        margin-top: 10vh;
+        /* Geser modal ke bawah, bisa ubah nilai sesuai selera */
+    }
+
+    @media (min-width: 576px) {
+        #editEventModal .modal-dialog {
+            margin-top: 15vh;
+        }
+    }
+</style> -->
+
+<style>
+    /* Modal edit event lebih kecil dan benar-benar di tengah */
+    #editEventModal .modal-dialog {
+        max-width: 400px;
+        /* Modal lebih kecil */
+        margin: 0 auto;
+        /* Modal horizontal di tengah */
+        margin-top: 15vh;
+        /* Modal vertikal di tengah */
+    }
+</style>
 
 <div class="container-fluid">
     <div
@@ -158,6 +183,80 @@
         </div>
     </div>
 
+    <!-- Modal Tambah Event -->
+    <div class="modal" id="addEventModal" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="addEventForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addEventLabel">Tambah Event Baru</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-2">
+                            <label for="addEventTitle" class="form-label">Judul</label>
+                            <input type="text" class="form-control" id="addEventTitle" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="addEventDesc" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="addEventDesc"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="addEventDate" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="addEventDate" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="addEventColor" class="form-label">Warna Tag</label>
+                            <input type="color" class="form-control form-control-color" id="addEventColor"
+                                value="#3788d8">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Tambah</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Edit Event -->
+    <div class="modal" id="editEventModal" tabindex="-1" aria-labelledby="editEventLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editEventForm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editEventLabel">Edit Event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="editEventId">
+                        <div class="mb-2">
+                            <label for="editEventTitle" class="form-label">Judul</label>
+                            <input type="text" class="form-control" id="editEventTitle" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="editEventDesc" class="form-label">Deskripsi</label>
+                            <textarea class="form-control" id="editEventDesc"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label for="editEventDate" class="form-label">Tanggal</label>
+                            <input type="date" class="form-control" id="editEventDate" required>
+                        </div>
+                        <div class="mb-2">
+                            <label for="editEventColor" class="form-label">Warna Tag</label>
+                            <input type="color" class="form-control form-control-color" id="editEventColor"
+                                value="#3788d8">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="deleteEventBtn" class="btn btn-danger">Hapus</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="loginToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -197,49 +296,105 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
-        if (calendarEl) {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: 400,
-                selectable: true, // aktifkan pilih tanggal
-                events: '/event', // ambil event dari backend
-                select: function(info) {
-                    // Prompt judul event
-                    var title = prompt('Judul kegiatan:');
-                    if (title) {
-                        // Kirim ke backend
-                        fetch('/event/create', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    title: title,
-                                    start: info.startStr,
-                                    end: info.endStr
-                                })
+        var addModalEl = document.getElementById('addEventModal');
+        var addModal = new bootstrap.Modal(addModalEl);
+        var editModalEl = document.getElementById('editEventModal');
+        var editModal = new bootstrap.Modal(editModalEl);
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 400,
+            selectable: true,
+            events: '/event',
+
+            // Tambah event baru dengan modal
+            select: function(info) {
+                // Isi tanggal otomatis
+                document.getElementById('addEventDate').value = info.startStr;
+                document.getElementById('addEventTitle').value = '';
+                document.getElementById('addEventDesc').value = '';
+                document.getElementById('addEventColor').value = '#3788d8';
+                addModal.show();
+
+                // Submit tambah event
+                document.getElementById('addEventForm').onsubmit = function(e) {
+                    e.preventDefault();
+                    fetch('/event/create', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                title: document.getElementById('addEventTitle').value,
+                                description: document.getElementById('addEventDesc')
+                                    .value,
+                                start: document.getElementById('addEventDate').value,
+                                color: document.getElementById('addEventColor').value
                             })
-                            .then(response => response.json())
-                            .then(data => {
-                                calendar.refetchEvents(); // refresh event
-                            });
-                    }
-                    calendar.unselect();
-                },
-                eventClick: function(info) {
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            calendar.refetchEvents();
+                            addModal.hide();
+                        });
+                };
+                calendar.unselect();
+            },
+
+
+            // Edit/hapus event
+            eventClick: function(info) {
+                // Isi form modal dengan data event
+                document.getElementById('editEventId').value = info.event.id;
+                document.getElementById('editEventTitle').value = info.event.title;
+                document.getElementById('editEventDesc').value = info.event.extendedProps.description ||
+                    '';
+                document.getElementById('editEventDate').value = info.event.startStr;
+                document.getElementById('editEventColor').value = info.event.backgroundColor ||
+                    '#3788d8';
+
+                editModal.show();
+
+                // Tombol hapus
+                document.getElementById('deleteEventBtn').onclick = function() {
                     if (confirm('Hapus jadwal "' + info.event.title + '"?')) {
                         fetch('/event/delete/' + info.event.id, {
                                 method: 'POST'
                             })
                             .then(response => response.json())
                             .then(data => {
-                                calendar.refetchEvents(); // refresh event
+                                calendar.refetchEvents();
+                                editModal.hide();
                             });
                     }
-                }
-            });
-            calendar.render();
-        }
+                };
+
+                // Submit edit
+                document.getElementById('editEventForm').onsubmit = function(e) {
+                    e.preventDefault();
+                    fetch('/event/update/' + info.event.id, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                title: document.getElementById('editEventTitle').value,
+                                description: document.getElementById('editEventDesc')
+                                    .value,
+                                start: document.getElementById('editEventDate').value,
+                                color: document.getElementById('editEventColor').value
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            calendar.refetchEvents();
+                            editModal.hide();
+                        });
+                };
+            }
+        });
+
+        calendar.render();
     });
 </script>
 <?= $this->endSection() ?>
