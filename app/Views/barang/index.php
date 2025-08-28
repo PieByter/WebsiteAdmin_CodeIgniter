@@ -104,7 +104,7 @@
                         $no = 1 + (($pager->getCurrentPage() - 1) * $pager->getPerPage());
                     }
                     foreach ($barangs as $barang):
-                    ?>
+                        ?>
                         <tr>
                             <td><?= $no++ ?></td>
                             <td>
@@ -181,7 +181,7 @@
                 $endPage = min($totalPages, $currentPage + 2);
 
                 for ($i = $startPage; $i <= $endPage; $i++):
-                ?>
+                    ?>
                     <li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
                         <a class="page-link" href="<?= $pager->getPageURI($i) ?>"><?= $i ?></a>
                     </li>

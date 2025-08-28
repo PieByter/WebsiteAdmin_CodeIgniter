@@ -1,14 +1,13 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
-
+# php -S localhost:8081 -t public
 /**
  * @var RouteCollection $routes
  */
 // $routes->get('/', 'Home::index');
 $routes->get('/', 'Auth::login');
 
-// Dashboard
 // $routes->get('dashboard', 'Dashboard::index', ['filter' => 'auth']);
 $routes->view('forbidden', 'errors/forbidden');
 

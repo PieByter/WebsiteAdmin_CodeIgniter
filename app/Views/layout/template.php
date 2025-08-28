@@ -15,17 +15,9 @@
         padding-top: 56px;
     }
 
-    .sidebar {
-        position: fixed;
-        top: 56px;
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-        padding: 48px 0 0;
-        width: 220px;
-        background: linear-gradient(135deg, #e3f0ff 0%, #b6d0f7 100%);
-        box-shadow: 0 0 10px rgba(25, 118, 210, 0.08);
-        border-right: 1px solid #b6d0f7;
+    .main-content {
+        margin-left: 220px;
+        padding: 20px;
     }
 
     .sidebar-sticky {
@@ -35,6 +27,40 @@
         padding-top: 0.5rem;
         overflow-x: hidden;
         overflow-y: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        padding: 48px 0 0;
+        width: 220px;
+        background: linear-gradient(135deg, #f5faff 0%, #dbeafe 100%);
+        box-shadow: 0 0 10px rgba(25, 118, 210, 0.08);
+        border-right: 1px solid #dbeafe;
+    }
+
+    .list-group-item {
+        background: transparent !important;
+        border: none;
+        color: #222e3c;
+        /* warna teks sidebar lebih gelap */
+        font-weight: 500;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .list-group-item:hover {
+        background: #e3f0ff !important;
+        color: #1976d2;
+    }
+
+    .list-group-item.active {
+        background: #b6d0f7 !important;
+        color: #1976d2 !important;
+        border: none;
+        font-weight: 600;
     }
 
     /* .sidebar .nav {
@@ -74,31 +100,6 @@
         font-weight: 500;
         font-size: 1rem;
     } */
-
-    .main-content {
-        margin-left: 220px;
-        padding: 20px;
-    }
-
-    .list-group-item {
-        background: transparent !important;
-        border: none;
-        color: #1976d2;
-        font-weight: 500;
-        transition: background 0.2s, color 0.2s;
-    }
-
-    .list-group-item:hover {
-        background: #e3f0ff !important;
-        color: #1976d2;
-    }
-
-    .list-group-item.active {
-        background: #b6d0f7 !important;
-        color: #1976d2 !important;
-        border: none;
-        font-weight: 600;
-    }
     </style>
 </head>
 
